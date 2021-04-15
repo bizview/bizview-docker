@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  bizview:
+      hostname: bizview
+      container_name: bizview
+      image: registry.cn-shenzhen.aliyuncs.com/frankzye/bizview:1.0.1
+  bizview-ui:
+      hostname: bizview-ui
+      container_name: bizview-ui
+      image: registry.cn-shenzhen.aliyuncs.com/frankzye/bizview-ui:1.0.3
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx-alpine
+    restart: always
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai 
+    links:
+      - bizview
+      - bizview-ui
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./conf.d:/etc/nginx/conf.d
+      - ./log:/var/log/nginx
